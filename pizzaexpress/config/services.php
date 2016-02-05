@@ -30,7 +30,7 @@ return [
     ],
 
     'stripe' => [
-        'model'  => pizzaexpress\User::class,
+        'model'  => pizzaexpress\Models\User::class,
         'key'    => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],

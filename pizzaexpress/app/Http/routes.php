@@ -85,7 +85,8 @@ Route::group(['middleware' => 'cors'], function(){
                 'as'=> 'ordem.entregue'
             ] );
         });
-
+        Route::get('authenticated', 'Api\UserController@authenticated');
+        Route::get('cupom/{code}', 'Api\CupomController@show');
 
     });
 });

@@ -1,14 +1,22 @@
 <ion-view>
     <ion-nav-title>Pedido</ion-nav-title>
     <div class="bar bar-subheader">
-        <button class="button button-clear button-icon ion-plus" ng-click="openListProducts()"></button>
+        <button class="button button-clear button-icon ion-plus-circled" ng-click="openListProducts()"></button>
         <h2 class="title">Total: R$ {{total}}</h2>
-        <button class="button button-clear button-icon ion-minus-circled"  ng-click="showDelete = !showDelete"></button>
+        <button class="button button-clear button-icon ion-minus-circled"
+                ng-click="showDelete = !showDelete" ng-class="{'button-assertive' : showDelete, '' : !showDelete}"></button>
     </div>
 
     <ion-content class="padding has-subheader">
+        <button type="button" class="button button-balanced button-full button-small"
+                ng-click="readBarCode()" ng-disabled="cupom.value != null">Adicionar Cupom</button>
         <button type="button" class="button button-positive button-full button-small" ng-click="save()">Enviar</button>
         <ion-list show-delete="showDelete">
+            <ion-item class="item-balanced item-icon-left" ng-show="cupom.value != null">
+                <span class="icon ion-close-circled" ng-click="removeCupom()"></span>
+                <strong>Cupom</strong>
+                <span class="badge badge-balanced">R$ {{cupom.value}}</span>
+            </ion-item>
             <ion-item ng-repeat="o in items" ng-click="openProductDetail($index)" >
                 <h3>{{ o.name }}</h3>
                 <div class="row">

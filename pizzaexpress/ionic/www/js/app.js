@@ -5,13 +5,16 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('starter.controllers', []);
 angular.module('starter.services', []);
+angular.module('starter.filters', []);
+angular.module('starter.diretivas', []);
 
 angular.module('starter', [
     'ionic', 'starter.controllers', 'starter.services',
-    'angular-oauth2', 'ngResource'
+    'starter.filters', 'starter.diretivas',
+    'angular-oauth2', 'ngResource', 'ngCordova'
 ])
     .constant('appConfig', {
-        baseUrl: 'http://localhost:8000'
+        baseUrl: 'http://192.168.25.3:8000'
     })
 
     .run(function($ionicPlatform) {
@@ -34,7 +37,7 @@ angular.module('starter', [
     })
 
     .config(function($stateProvider, $urlRouterProvider,
-                     OAuthProvider, OAuthTokenProvider, appConfig ){
+                     OAuthProvider, OAuthTokenProvider, appConfig, $provide ){
 
         OAuthProvider.configure({
             baseUrl: appConfig.baseUrl, //lembrar de mudar para https:
@@ -59,14 +62,27 @@ angular.module('starter', [
             .state('home',{
                 url: '/home',
                 templateUrl: 'templates/home.html',
-                controller: function($scope){
+                controller: function($scope, $ionicSideMenuDelegate){
 
                 }
             })
             .state('client', {
                 abstract: true,
                 url: '/client',
-                template: '<ion-nav-view/>'
+                templateUrl: 'templates/client/menu.html',
+                controller: 'ClientMenuCtrl'
+            })
+            .state('client.order', {
+                cache: false,
+                url: '/order',
+                templateUrl: 'templates/client/order.html',
+                controller: 'ClientOrderCtrl'
+            })
+            .state('client.view_order', {
+                cache: false,
+                url: '/view_order/:id',
+                templateUrl: 'templates/client/view_order.html',
+                controller: 'ClientViewOrderCtrl'
             })
             .state('client.checkout', {
                 cache: false,
@@ -80,10 +96,62 @@ angular.module('starter', [
                 templateUrl: 'templates/client/checkout_item_detail.html',
                 controller: 'ClientCheckoutDetailCtrl'
             })
+            .state('client.checkout_successful',{
+                cache: false,
+                url: '/checkout/successful',
+                templateUrl: 'templates/client/checkout_successful.html',
+                controller: 'ClientCheckoutSuccessfulCtrl'
+            })
             .state('client.view_products', {
                 url: '/view_products',
                 templateUrl: 'templates/client/view_products.html',
                 controller: 'ClientViewProductsCtrl'
+            })
+            .state('deliveryman', {
+                abstract:true,
+                url:'/deliveryman',
+                templateUrl: 'templates/deliveryman/menu.html',
+                controller:'DeliverymanMenuCtrl'
+            })
+            .state('deliveryman.order', {
+                url:'/order',
+                templateUrl: 'templates/deliveryman/order.html',
+                controller:'DeliverymanOrderCtrl'
+            })
+            .state('deliveryman.view_order',{
+                cache: false,
+                url:'/view_order/:id',
+                templateUrl: 'templates/deliveryman/view_order.html',
+                controller:'DeliverymanViewOrderCtrl'
             });
-        //$urlRouterProvider.otherwise('/login');
+        $urlRouterProvider.otherwise('/login');
+        $provide.decorator('OAuthToken',['$localStorage', '$delegate', function($localStorage, $delegate){
+            Object.defineProperties($delegate, {
+                setToken:{
+                    value: function(data){
+                        return $localStorage.setObject('token', data);
+                    },
+                    enumerable: true,
+                    configurable: true,
+                    writable: true
+                },
+                getToken: {
+                    value: function(){
+                        return $localStorage.getObject('token');
+                    },
+                    enumerable: true,
+                    configurable: true,
+                    writable: true
+                },
+                removeToken: {
+                    value: function(){
+                        $localStorage.setObject('token', null);
+                    },
+                    enumerable: true,
+                    configurable: true,
+                    writable: true
+                }
+            });
+            return $delegate;
+        }]);
     });

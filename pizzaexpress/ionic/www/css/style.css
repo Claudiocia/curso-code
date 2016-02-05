@@ -1,1 +1,10 @@
 /* Empty. Add your own CSS if you like */
+.minusculo{
+    text-transform: lowercase;
+}
+.maiusculo{
+    text-transform: uppercase;
+}
+.vertbottom{
+    vertical-align: text-bottom;
+}
