@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use LucaDegasperi\OAuth2Server\Facades\Authorizer;
+use pizzaexpress\Events\GetLocationDeliveryman;
 use pizzaexpress\Http\Controllers\Controller;
 use pizzaexpress\Http\Requests;
+use pizzaexpress\Models\Geo;
 use pizzaexpress\Repositories\OrderRepository;
 use pizzaexpress\Repositories\ProductRepository;
 use pizzaexpress\Repositories\UserRepository;
@@ -44,7 +46,7 @@ class DeliveryCheckoutController extends Controller
             ->skipPresenter(false)
             ->with($this->with)
             ->scopeQuery(function($query) use($id){
-            return $query->where('user_deliveryman_id', '=', $id);
+            return $query->where('user_deliveryman_id', '=', $id, 'and', 'status', '=', '0' );
         })->paginate();
 
         return $orders;
@@ -61,13 +63,19 @@ class DeliveryCheckoutController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
-        $status = $request->get('status');
         $idDeliveryman = Authorizer::getResourceOwnerId();
-        $order = $this->service->updateStatus($id, $idDeliveryman, $status);
-        if($order){
-            return $this->orderRepository->find($order->id);
-        }
-        abort(400, "Ordem de Entrega não encontrada");
+        return $this->service->updateStatus($id, $idDeliveryman, $request->get('status'));
+
+    }
+
+    public function geo(Request $request, Geo $geo, $id)
+    {
+        $idDeliveryman = Authorizer::getResourceOwnerId();
+        $order = $this->orderRepository->getByIdDeliveryman($id, $idDeliveryman);
+        $geo->lat = $request->get('lat');
+        $geo->long = $request->get('long');
+        event(new GetLocationDeliveryman($geo, $order));
+        return$geo;
     }
 
 }

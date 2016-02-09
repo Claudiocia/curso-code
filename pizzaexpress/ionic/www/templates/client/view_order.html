@@ -15,8 +15,8 @@
                 </div>
             </ion-item>
 
-            <div class="row" ng-if="order.cupom.cupom_code != null">
-                <div class="col">Cupom de desconto no valor de  <i class="ion ion-social-usd"> {{order.cupom.value}}</i></div>
+            <div class="row" ng-show="order.cupom">
+                <div class="col">Cupom de desconto no valor de  <i class="ion ion-social-usd"> {{order.cupom.data.value}}</i></div>
             </div>
         </ion-list>
     </ion-content>

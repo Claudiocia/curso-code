@@ -8,8 +8,9 @@ angular.module('starter.controllers')
                 template: 'Carregando...'
             });
 
-            Order.get({id: $stateParams.id, include: "items, cupom"}, function(data){
+            Order.get({id: $stateParams.id, include: "items,cupom"}, function(data){
                 $scope.order = data.data;
+                console.log(data.data);
                 $ionicLoading.hide();
             }, function(dataError){
                 $ionicLoading.hide();

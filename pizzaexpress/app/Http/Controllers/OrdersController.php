@@ -42,6 +42,7 @@ class OrdersController extends Controller
         $all = $request->all();
         $this->repository->update($all, $id);
 
-        return redirect()->route('index.ordem');
+        $orders = $this->repository->paginate(10);
+        return view ('admin.orders.index', compact('orders')); //redirect()->route('index.ordem');
     }
 }

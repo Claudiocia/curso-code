@@ -1,14 +1,14 @@
 angular.module('starter.controllers')
     .controller('DeliverymanOrderCtrl', [
         '$scope', '$state',
-        '$ionicLoading', 'Order',
-        function($scope, $state, $ionicLoading, Order){
+        '$ionicLoading', 'DeliverymanOrder',
+        function($scope, $state, $ionicLoading, DeliverymanOrder){
             $scope.items = [];
             $ionicLoading.show({
                 template: 'Carregando...'
             });
             $scope.openOrder = function(order){
-                $state.go('client.view_order', {id: order.id});
+                $state.go('deliveryman.view_order', {id: order.id});
             };
             //Código para o pushrefresh que deverá ser usado pelo deliveryman
             $scope.doRefresh = function(){
@@ -20,7 +20,7 @@ angular.module('starter.controllers')
                 })
             };
             function getOrders() {
-                return Order.query({
+                return DeliverymanOrder.query({
                     id: null,
                     orderBy: 'created_at',
                     sortedBy: 'desc'
@@ -29,6 +29,7 @@ angular.module('starter.controllers')
 
             getOrders().then(function(data){
                 $scope.items = data.data;
+                console.log(data.data);
                 $ionicLoading.hide();
             }, function(dataError){
                 $ionicLoading.hide();

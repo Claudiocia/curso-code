@@ -1,33 +1,41 @@
 angular.module('starter.controllers')
     .controller('LoginCtrl', [
-        '$scope', 'OAuth', '$ionicPopup', '$state', '$q', function($scope, OAuth,
-                                                   $ionicPopup, $state, $q){
+        '$scope', 'OAuth', 'OAuthToken' ,
+        '$ionicPopup', '$state', 'UserData', 'User', '$localStorage',
+        function($scope, OAuth, OAuthToken ,
+                 $ionicPopup, $state, UserData, User, $localStorage){
             $scope.user = {
                 username: '',
                 password: ''
             };
 
-            function adiarExecucao(){
-                var deffered = $q.defer();
-                setTimeout(function(){
-                    deffered.resolve({name: 'ionic'});
-                }, 2000);
-                return deffered.promise;
-            }
-            adiarExecucao().then(function(data){
-                console.log(data);
-            });
-
             $scope.login = function(){
-                OAuth.getAccessToken($scope.user)
+                var promise = OAuth.getAccessToken($scope.user);
+                promise
                     .then(function(data){
-                        $state.go('client.checkout');
+                        var token = $localStorage.get('device_token');
+                        return User.updateDeviceToken({},{device_token: token}).$promise;
+                    })
+                    .then(function(data){
+                        return User.authenticated({include: 'client'}).$promise;
+                    })
+                    .then(function(data){
+                        //console.log(data.data);
+                        UserData.set(data.data);
+                        //console.log(UserData.get().role);
+                        if(UserData.get().role == 'deliveryman') {
+                            $state.go('deliveryman.order');
+                        }else{
+                            $state.go('client.checkout');
+                        }
                     }, function(responseError){
+                        UserData.set(null);
+                        OAuthToken.removeToken();
                         $ionicPopup.alert({
                             title: 'Advertência',
                             template: 'Login e/ou Senha inválidos'
-                        })
+                        });
                         console.debug(responseError);
                     });
             }
-    }]);
+        }]);

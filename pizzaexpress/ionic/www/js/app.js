@@ -9,16 +9,18 @@ angular.module('starter.filters', []);
 angular.module('starter.diretivas', []);
 
 angular.module('starter', [
-    'ionic', 'starter.controllers', 'starter.services',
+    'ionic','ionic.service.core', 'starter.controllers', 'starter.services',
     'starter.filters', 'starter.diretivas',
-    'angular-oauth2', 'ngResource', 'ngCordova'
+    'angular-oauth2', 'ngResource', 'ngCordova',
+    'uiGmapgoogle-maps', 'pusher-angular'
 ])
     .constant('appConfig', {
-        baseUrl: 'http://192.168.25.3:8000'
+        baseUrl: 'http://192.168.25.3:8000',
+        pusherKey: '6a88d2f1443280079cde'
     })
 
-    .run(function($ionicPlatform) {
-
+    .run(function($ionicPlatform, $window, appConfig, $localStorage) {
+        $window.client = new Pusher(appConfig.pusherKey);
         $ionicPlatform.ready(function() {
             if(window.cordova && window.cordova.plugins.Keyboard) {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -33,6 +35,16 @@ angular.module('starter', [
             if(window.StatusBar) {
                 StatusBar.styleDefault();
             }
+            Ionic.io();
+            var push = new Ionic.Push({
+                debug: true,
+                onNotification: function(message){
+                    console.log(message);
+                }
+            });
+            push.register(function(token){
+                $localStorage.set('device_token', token.token);
+            });
         });
     })
 
@@ -55,6 +67,7 @@ angular.module('starter', [
 
         $stateProvider
             .state('login',{
+                cache: false,
                 url: '/login',
                 templateUrl: 'templates/login.html',
                 controller: 'LoginCtrl'
@@ -68,6 +81,7 @@ angular.module('starter', [
             })
             .state('client', {
                 abstract: true,
+                cache: false,
                 url: '/client',
                 templateUrl: 'templates/client/menu.html',
                 controller: 'ClientMenuCtrl'
@@ -83,6 +97,12 @@ angular.module('starter', [
                 url: '/view_order/:id',
                 templateUrl: 'templates/client/view_order.html',
                 controller: 'ClientViewOrderCtrl'
+            })
+            .state('client.view_delivery', {
+                cache:false,
+                url: '/view_delivery/:id',
+                templateUrl: 'templates/client/view_delivery.html',
+                controller: 'ClientViewDeliveruCtrl'
             })
             .state('client.checkout', {
                 cache: false,
@@ -109,11 +129,13 @@ angular.module('starter', [
             })
             .state('deliveryman', {
                 abstract:true,
+                cache: false,
                 url:'/deliveryman',
                 templateUrl: 'templates/deliveryman/menu.html',
                 controller:'DeliverymanMenuCtrl'
             })
             .state('deliveryman.order', {
+                cache: false,
                 url:'/order',
                 templateUrl: 'templates/deliveryman/order.html',
                 controller:'DeliverymanOrderCtrl'

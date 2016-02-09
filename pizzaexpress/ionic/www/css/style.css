@@ -8,3 +8,6 @@
 .vertbottom{
     vertical-align: text-bottom;
 }
+.angular-google-map-container{
+    height: 300px;
+}

@@ -1,8 +1,8 @@
 angular.module('starter.controllers')
     .controller('ClientOrderCtrl', [
         '$scope', '$state',
-        '$ionicLoading', 'Order',
-        function($scope, $state, $ionicLoading, Order){
+        '$ionicLoading', '$ionicActionSheet', 'Order',
+        function($scope, $state, $ionicLoading, $ionicActionSheet, Order){
             $scope.items = [];
             $ionicLoading.show({
                 template: 'Carregando...'
@@ -29,6 +29,29 @@ angular.module('starter.controllers')
                 }, function(dataError){
                     $scope.$broadcast('scroll.refreshComplete');
                 })
+            };
+            $scope.showActionSheet = function(order){
+                $ionicActionSheet.show({
+                    buttons: [
+                        {text: 'Ver Detalhes'},
+                        {text: 'Ver Entrega'}
+                    ],
+                    titleText: 'Opções',
+                    cancelText: 'Cancelar',
+                    cancel: function() {
+                        //
+                    },
+                    buttonClicked: function(index){
+                        switch (index){
+                            case 0:
+                                $state.go('client.view_order', {id: order.id});
+                                break;
+                            case 1:
+                                $state.go('client.view_delivery', {id: order.id});
+                                break;
+                        }
+                    }
+                });
             };
             function getOrders() {
                 return Order.query({

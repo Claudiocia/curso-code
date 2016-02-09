@@ -1,19 +1,15 @@
 angular.module('starter.controllers')
     .controller('ClientMenuCtrl', [
-        '$scope', '$state',
-        '$ionicLoading', 'User',
-        function($scope, $state, $ionicLoading, User){
-            $scope.user = {
-                name: ''
+        '$scope', '$state', 'UserData', 'OAuthToken',
+        function($scope, $state, UserData, OAuthToken){
+            $scope.user = UserData.get();
+
+            $scope.logout = function(data){
+                //console.log(data);
+                UserData.set(null);
+                data = null;
+                OAuthToken.removeToken();
+                $state.go('login');
+                //console.log(data);
             };
-            $ionicLoading.show({
-                template: 'Carregando...'
-            });
-            User.autenticated({}, function(data){
-                $scope.user = data.data;
-                $ionicLoading.hide();
-            }, function(dataError){
-                $ionicLoading.hide();
-                alert('Conexão Falhou');
-            });
         }]);

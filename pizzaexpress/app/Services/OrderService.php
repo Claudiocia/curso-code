@@ -9,6 +9,7 @@
 namespace pizzaexpress\Services;
 
 
+use Dmitrovskiy\IonicPush\PushProcessor;
 use pizzaexpress\Models\Order;
 use pizzaexpress\Repositories\CupomRepository;
 use pizzaexpress\Repositories\OrderRepository;
@@ -19,14 +20,17 @@ class OrderService
     private $orderRepository;
     private $cupomRepository;
     private $productRepository;
+    private $pushProcessor;
 
     function __construct(OrderRepository $orderRepository,
                          CupomRepository $cupomRepository,
-                         ProductRepository $productRepository)
+                         ProductRepository $productRepository,
+                         PushProcessor $pushProcessor)
     {
         $this->orderRepository = $orderRepository;
         $this->cupomRepository = $cupomRepository;
         $this->productRepository = $productRepository;
+        $this->pushProcessor = $pushProcessor;
     }
 
     public function create(array $data)
@@ -78,13 +82,31 @@ class OrderService
     public function updateStatus($id, $idDeliveryman, $status)
     {
         $order = $this->orderRepository->getByIdDeliveryman($id, $idDeliveryman);
-        if($order instanceof Order){
-            $order->status = $status;
-            $order->save();
-            return$order;
+        $order->status = $status;
+        switch((int)$status){
+            case 1:
+                if(!$order->hash){
+                    $order->hash = md5((new \DateTime())->getTimestamp());
+                }
+                $order->save();
+                break;
+            case 2:
+                $user = $order->client->user;
+                $order->save();
+                $token = $user->device_token;
+                $this->pushProcessor->notify([$token],[
+                    'alert' => "Seu pedido {$order->id} acabou de ser entregue"
+                ]);
+                break;
+            case 3:
+                $user = $order->client->user;
+                $order->save();
+                $this->pushProcessor->notify([$user->device_token],[
+                    'alert' => "Seu pedido {$order->id} acabou de ser cancelado"
+                ]);
+                break;
         }
-
-        return false;
+        return $order;
     }
 
 
