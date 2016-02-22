@@ -32,12 +32,12 @@ return [
         'password' => [
             'class' => '\League\OAuth2\Server\Grant\PasswordGrant',
             'callback' => '\pizzaexpress\OAuth2\PasswordGrantVerifier@verify',
-            'access_token_ttl' => 3600
+            'access_token_ttl' => 36000
         ],
         'refresh_token' => [
             'class' => '\League\OAuth2\Server\Grant\RefreshTokenGrant',
-            'access_token_ttl' => 3600,
-            'refresh_token_ttl' => 36000
+            'access_token_ttl' => 36000,
+            'refresh_token_ttl' => 360000
         ]
 
     ],
@@ -110,7 +110,7 @@ return [
     |
     */
 
-    'access_token_ttl' => 3600,
+    'access_token_ttl' => 36000,
 
     /*
     |--------------------------------------------------------------------------

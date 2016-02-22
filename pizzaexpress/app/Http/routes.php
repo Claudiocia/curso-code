@@ -11,9 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+Route::get('/', ['as' => 'index.home', 'uses' => 'ClientsController@inicio']);
+Route::get('/info', ['as' => 'info', 'uses' => 'ClientsController@info']);
+
+Route::post('novo/registro', ['as'=>'novo.cliente', 'uses'=>'ClientsController@novoCliente']);
 
 
 Route::group(['prefix'=> 'admin', 'middleware'=> 'auth.checkrole:admin'], function(){
@@ -37,7 +38,7 @@ Route::group(['prefix'=> 'admin', 'middleware'=> 'auth.checkrole:admin'], functi
     Route::post('produtos/salvar', ['as'=>'salva.produto', 'uses'=>'ProductsController@store']);
     Route::get('produtos/deletar/{id}', ['as'=>'deleta.produto', 'uses'=>'ProductsController@destroy']);
 
-    Route::get('ordens', ['as'=>'index.ordem', 'uses'=>'OrdersController@index']);
+    Route::get('ordens', ['as'=>'index.ordem.lista', 'uses'=>'OrdersController@index']);
     Route::get('ordens/editar/{id}', ['as'=>'edita.ordem', 'uses'=>'OrdersController@edit']);
     Route::post('ordens/update/{id}', ['as'=>'altera.ordem', 'uses'=>'OrdersController@update']);
 

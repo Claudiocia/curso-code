@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use pizzaexpress\Http\Requests;
 use pizzaexpress\Http\Requests\AdminClientRequest;
+use pizzaexpress\Http\Requests\ClientRequest;
 use pizzaexpress\Repositories\ClientRepository;
 use pizzaexpress\Services\ClientService;
 
@@ -36,19 +37,27 @@ class ClientsController extends Controller
     {
         return view('admin.clients.create');
     }
+    public function inicio()
+    {
+        return view('index');
+    }
+    public function info(){
+        return view('info');
+    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(AdminClientRequest $request)
     {
        $data = $request->all();
         $this->clientService->create($data);
 
         return redirect()->route('index.cliente');
+    }
+
+    public function novoCliente(ClientRequest $request)
+    {
+        $data = $request->all();
+        $this->clientService->store($data);
+        return redirect()->route('index.home');
     }
 
     public function edit($id)
@@ -58,7 +67,6 @@ class ClientsController extends Controller
         return view('admin.clients.edit', compact('client'));
     }
 
-
     public function update(AdminClientRequest $request, $id)
     {
         $data = $request->all();
@@ -67,12 +75,6 @@ class ClientsController extends Controller
         return redirect()->route('index.cliente');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //

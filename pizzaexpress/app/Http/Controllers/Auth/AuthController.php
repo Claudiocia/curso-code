@@ -2,7 +2,7 @@
 
 namespace pizzaexpress\Http\Controllers\Auth;
 
-use pizzaexpress\User;
+use pizzaexpress\Models\User;
 use Validator;
 use pizzaexpress\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;

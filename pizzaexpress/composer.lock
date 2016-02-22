@@ -60,7 +60,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-cors/zipball/8cdcbedcc933f7d7228ad155ff70891ce8650ee3",
+                "url": "https://api.github.com/repos/barryvdh/laravel-cors/zipball/39975d7505757488f982ca132bcd02c704792fd8",
                 "reference": "9d259e69268768c77005e3a785af6f633e976512",
                 "shasum": ""
             },
@@ -471,7 +471,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/581943b46d0736605e4ef4676e9a820bbfff7388",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/b59321a17f3e3ebc14f2bbbf73b4d065a88cf3f6",
                 "reference": "581943b46d0736605e4ef4676e9a820bbfff7388",
                 "shasum": ""
             },

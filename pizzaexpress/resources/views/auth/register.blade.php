@@ -20,7 +20,7 @@
 						</div>
 					@endif
 
-					<form class="form-horizontal" role="form" method="POST" action="{{ url('/auth/register') }}">
+					<form class="form-horizontal" role="form" method="POST" action="{{ url('/novo/registro') }}">
 						{!! csrf_field() !!}
 
 						<div class="form-group">
@@ -40,16 +40,49 @@
 						<div class="form-group">
 							<label class="col-md-4 control-label">Password</label>
 							<div class="col-md-6">
-								<input type="password" class="form-control" name="password">
+								<input type="password" class="form-control" name="senha">
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label class="col-md-4 control-label">Confirm Password</label>
 							<div class="col-md-6">
-								<input type="password" class="form-control" name="password_confirmation">
+								<input type="password" class="form-control" name="senha_confirmation">
 							</div>
 						</div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Telefone:</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="client[phone]">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Endereço:</label>
+                            <div class="col-md-6">
+                                <textarea class="form-control" rows="5" name="client[address]"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Cidade:</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="client[city]">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Estado:</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="client[state]">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">CEP:</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="client[zipcode]">
+                            </div>
+                        </div>
 
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">

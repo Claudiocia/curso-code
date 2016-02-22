@@ -42,4 +42,15 @@ class ClientService {
         $this->clientRepository->create($data);
     }
 
+    public function store(array $data)
+    {
+        $data['password'] = bcrypt($data['senha']);
+
+        $user = $this->userRepository->create(($data));
+        $data['client']['user_id'] = $user->id;
+
+        $this->clientRepository->create($data['client']);
+
+    }
+
 }

@@ -15,7 +15,7 @@ angular.module('starter', [
     'uiGmapgoogle-maps', 'pusher-angular'
 ])
     .constant('appConfig', {
-        baseUrl: 'http://192.168.25.3:8000',
+        baseUrl: 'http://www.companhiadeideias.net.br', /*  'http://localhost:8000', */
         pusherKey: '6a88d2f1443280079cde'
     })
 
@@ -38,11 +38,17 @@ angular.module('starter', [
             Ionic.io();
             var push = new Ionic.Push({
                 debug: true,
-                onNotification: function(message){
+               onNotification: function(message){
                     console.log(message);
-                }
+                } /*,
+                pluginConfig: {
+                    android: {
+                        iconColor: "red"
+                    }
+                }*/
             });
             push.register(function(token){
+                console.log(token);
                 $localStorage.set('device_token', token.token);
             });
         });

@@ -20,7 +20,7 @@ angular.module('starter.controllers')
                         return User.authenticated({include: 'client'}).$promise;
                     })
                     .then(function(data){
-                        //console.log(data.data);
+                        console.log(data.data);
                         UserData.set(data.data);
                         //console.log(UserData.get().role);
                         if(UserData.get().role == 'deliveryman') {
